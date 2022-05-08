@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+\usepackage[legalpaper, margin=1.5in]{geometry}
+
+\title{Computational Intelligence}
+\author{Omer Keider, Eyal Ginosar, Adi Yehoshua}
+\date{May 2022}
+
+\begin{document}
+
+\maketitle
+
+
+\section{Introduction}
+Assumptions:
+	Each floor has one robot- the robot will be responsible for one floor only, and won’t pass between them.
+
+\section{Model Formalization}
+TSP  – A travel salesman problem for robot that navigates between patients in the hospital.
+\subsection{Parameters}
+P = $\{p_1, p_2, … , p_n\}$ - A set of patients waiting for the robot to visit them. \\
+R = $\{r_1, r_2, … , r_m\}$ - A set of rooms in the hospital \\ \\
+\textbf{Patients:}\\
+Each patient will hold several parameters:
+\begin{itemize}
+    \item Room of the patient ($R_m$)
+    \item The urgency of the treatment ($u_n$) – maximum completion time of the treatment
+    \item Type of disease ($CT_n$) - The time takes to treat the patient
+\end{itemize}
+\textbf{Rooms:}\\
+Each room will hold several parameters:
+\begin{itemize}
+    \item List of patients in the room ($p\subset P$)
+    \item The location of the room ($[X, Y]$)
+\end{itemize}
+\textbf{Optimization Variables:}\\ \\
+$T_{ij}$ – \( \frac{(Distance_{Between Rooms})}{(Speed_{Of The Robot})} \) \\ \\
+$C_n$ -  Cost of robot being late for patient n. \\ \\
+$\Delta_{i\_latency}=max(0, CT_n-u_n)$ - Delta between the maximum time to get the treatment and the time the patient got the treatment. \\ \\
+$u_n$ = The due date to complete the treatment for patient $n$.\\ \\
+$CT_n$ = Completion time of treatment for patient $n$.\\ \\
+Depending upon whether the direction in which an edge of the graph is traversed matters, one distinguishes the asymmetric from the symmetric traveling salesman problem. To formulate the asymmetric TSP on m cities, one introduces zero-one variables. 
+\[ 
+x_{ij} =
+\begin{cases}
+1,&\text{if the edge is $i \rightarrow j$ is in the tour}\\
+0,&\text{otherwise}\\
+\end{cases} 
+\]
+And, given the fact that every node of the graph must have exactly one edge pointing towards it and one pointing away from it, one obtains the classic assignment problem. These constraints alone are not enough since this formulation would allow “subtours,” that is, it would allow disjoint loops to occur. For this reason, a proper formulation of the asymmetric traveling salesman problem must remove these subtours from consideration by the addition of “subtour elimination” constraints. Next, we define the problem.
+\\ \\ 
+\textbf{Target Function:}\\
+We would like to minimize the sum of driving time between two points - $i$ and $j$ (denotes as $T_{ij}$), where  $x_{ij}$ indicates if the robot moved in that direction ($i \rightarrow j$), and the cost of late time for each patient (denotes as $\Delta_{i\_latency}\cdot C_i$)
+
+\[ Z = Min \sum_{i=0}^{n}\sum_{j=0}^{n} T_{ij}\cdot x_{ij}+\sum_{i=0}^{n}\Delta_{i\_latency}\cdot C_i \]
+\textbf{s.t.} \\
+$\sum_{j=1}^{m} x_{ij} = 1$ \quad for $i = 1, ... , m$ \\ \\
+$\sum_{i=1}^{m} x_{ij} = 1$ \quad for $i = 1, ... , m$ \\ \\
+$\sum_{i\in K}\sum_{j\in K} x_{ij} \leq |K|-1$ \quad for all $K \subset \{1, ... , m\}$ \\ \\
+$0 < u_n$ - Where the completion time of treatment ($u_n$) is positive for every patient. \\ \\
+Where $K$ is any nonempty proper subset of the rooms $1, ..., m$.
+\end{document}

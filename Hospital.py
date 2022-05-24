@@ -2,9 +2,8 @@ from Ward import Ward
 from Patient import Patient
 from Room import Room
 import pandas as pd
-import xlrd
 
-path = 'C:\\Users\\noamga\\Downloads\\Data-20200802T142933Z-001\\Data'
+
 class Hospital(object):
 
     def __init__(self, h_id, name):

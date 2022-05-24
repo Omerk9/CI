@@ -15,7 +15,7 @@ import decimal
 # from pylab import plot, title, xlabel, ylabel, savefig, legend, array
 
 random.seed(4)
-inf_price = 1_000_000  # for hard constraints
+inf_price = 1_000  # for hard constraints
 
 
 def init_variables2(hospital):
@@ -55,6 +55,7 @@ def infinity():
     i = 0
     while True:
         i += 1
+        print(i)
         yield i
 
 
@@ -92,11 +93,14 @@ def sa_stopping_temp(case=0):
     if case == 0:
         return 0.166
     if case == 1:
-        return 0.166 * 10_000 * 2
+        # return 0.166 * 10_000 * 2
+        return 0.166 * 100 * 2
     if case == 2:
-        return 0.166 * 10_000 * 3
+        #return 0.166 * 10_000 * 3
+        return 0.166 * 100 * 3
     if case == 3:
-        return 0.166 * 10_0000 * 4
+        #return 0.166 * 10_0000 * 4
+        return 0.166 * 100 * 4
 
 
 def set_init_value_day(v_dict, ward):
@@ -190,6 +194,9 @@ def simulated_annealing(v_dict, ward, init_sol_param, case, genetic):
     num_changes = 0
     for t in infinity():
         # plot_list.append([t, plot_value])
+        print(t)
+        if t > 50 :
+            return g
         T = sa_schedule(t)
         st = sa_stopping_temp()
         if T <= st:  # and best_value < 100_000:  # none hard constraints are broken
@@ -341,8 +348,9 @@ def update_tuple_value(t, ward, d_dict, room_num, case, genetic_value=False):
     {1 - all diff + surgeon patient, 2 - surgeon feasible , 3- None}
     :return: delta E the difference of the total price of solution
     """
+    print('Finished 3 check')
     if t is None:
-        print('yes')
+        print('Finished 3')
     sr_v = t[0]
     if (sr_v == None):
         print("uv is none")
@@ -414,8 +422,9 @@ def update_variable_value(chosen_v, t, ward, d_dict, room_num, case, genetic_val
     {1 - all diff + surgeon patient, 2 - surgeon feasible , 3- None}
     :return: delta E the difference of the total price of solution
     """
+    print(' Finished 2 check')
     if (t == None):
-        print("yes")
+        print("Finished 2")
     if genetic_value == False:
         if len(chosen_v.domain) > 0:
             i = t.index(chosen_v)
@@ -731,8 +740,13 @@ def genetic_initialize_population(size, case):
     var_dict = init_variables2(Soroka)
     w = Soroka.find_ward(w_id=1)
     sa_schedules = simulated_annealing(var_dict, w, by_waiting_time, case=case, genetic=True)
+    print('schedules' , sa_schedules)
+    print('type', type(sa_schedules))
+    print(' ')
+    print(len(sa_schedules) , size)
     sample_index = len(sa_schedules) // size
     for i in range(len(sa_schedules)):
+        print(i , sample_index)
         if i % sample_index == 0:
             population.append(sa_schedules[i])
     genetic_selection_probability(population)
@@ -873,7 +887,8 @@ def get_constraint_dictionary(v_dict):
                     return srv_constraints, sv_constraints
 
 
-g_values, bc = genetic_algorithm(0.06, 50, 1, 500)
+g_values, bc = genetic_algorithm(0.06, 1, 1, 200)
+# g_values, bc = genetic_algorithm(0.06, 50, 1, 500)
 for v in g_values:
     if v[0] > inf_price:
         v[0] = 5_000
@@ -911,7 +926,7 @@ for i, v in enumerate(avg_values):
 plt.show()
 
 
-print('yes')
+print('Finished 1')
 
 '''# Simulated Annealing
 Soroka = Hospital(1, "Soroka")

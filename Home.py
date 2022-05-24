@@ -6,6 +6,7 @@ import mlrose
 import pandas as pd
 import networkx as nx
 import matplotlib.pyplot as plt
+#check
 
 # get the x,y coordinates from the file in the specific location
 def openfile(location):
